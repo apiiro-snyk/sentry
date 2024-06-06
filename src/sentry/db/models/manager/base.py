@@ -6,7 +6,7 @@ import weakref
 from collections.abc import Callable, Collection, Generator, Mapping, MutableMapping, Sequence
 from contextlib import contextmanager
 from enum import IntEnum, auto
-from typing import Any, Generic
+from typing import TYPE_CHECKING, Any
 
 from django.conf import settings
 from django.db import models, router
@@ -42,8 +42,13 @@ class ModelManagerTriggerCondition(IntEnum):
 
 ModelManagerTriggerAction = Callable[[type[Model]], None]
 
+if TYPE_CHECKING:
+    _base_manager_base = DjangoBaseManager[M]
+else:
+    _base_manager_base = DjangoBaseManager.from_queryset(BaseQuerySet)
 
-class BaseManager(DjangoBaseManager.from_queryset(BaseQuerySet), Generic[M]):  # type: ignore[misc]
+
+class BaseManager(_base_manager_base[M]):
     lookup_handlers = {"iexact": lambda x: x.upper()}
     use_for_related_fields = True
 
