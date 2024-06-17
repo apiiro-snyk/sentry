@@ -1,6 +1,6 @@
 from unittest import mock
 
-import responses
+import orjson
 
 from sentry.models.activity import Activity
 from sentry.notifications.notifications.activity.resolved_in_release import (
@@ -8,7 +8,6 @@ from sentry.notifications.notifications.activity.resolved_in_release import (
 )
 from sentry.testutils.cases import PerformanceIssueTestCase, SlackActivityNotificationTest
 from sentry.testutils.helpers.notifications import TEST_ISSUE_OCCURRENCE, TEST_PERF_ISSUE_OCCURRENCE
-from sentry.testutils.helpers.slack import get_blocks_and_fallback_text
 from sentry.testutils.skips import requires_snuba
 from sentry.types.activity import ActivityType
 
@@ -29,13 +28,14 @@ class SlackResolvedInReleaseNotificationTest(
             )
         )
 
-    @responses.activate
     def test_resolved_in_release_block(self):
         notification = self.create_notification(self.group)
         with self.tasks():
             notification.send()
 
-        blocks, fallback_text = get_blocks_and_fallback_text()
+        blocks = orjson.loads(self.mock_post.call_args.kwargs["blocks"])
+        fallback_text = self.mock_post.call_args.kwargs["text"]
+
         release_name = notification.activity.data["version"]
         assert fallback_text == f"Issue marked as resolved in {release_name} by {self.name}"
         assert blocks[0]["text"]["text"] == fallback_text
@@ -49,7 +49,6 @@ class SlackResolvedInReleaseNotificationTest(
             == f"{self.project.slug} | <http://testserver/settings/account/notifications/workflow/?referrer=resolved_in_release_activity-slack-user&notification_uuid={notification_uuid}&organizationId={self.organization.id}|Notification Settings>"
         )
 
-    @responses.activate
     @mock.patch(
         "sentry.eventstore.models.GroupEvent.occurrence",
         return_value=TEST_PERF_ISSUE_OCCURRENCE,
@@ -65,7 +64,9 @@ class SlackResolvedInReleaseNotificationTest(
         with self.tasks():
             notification.send()
 
-        blocks, fallback_text = get_blocks_and_fallback_text()
+        blocks = orjson.loads(self.mock_post.call_args.kwargs["blocks"])
+        fallback_text = self.mock_post.call_args.kwargs["text"]
+
         release_name = notification.activity.data["version"]
         assert fallback_text == f"Issue marked as resolved in {release_name} by {self.name}"
         assert blocks[0]["text"]["text"] == fallback_text
@@ -77,7 +78,6 @@ class SlackResolvedInReleaseNotificationTest(
             "resolved_in_release_activity-slack",
         )
 
-    @responses.activate
     @mock.patch(
         "sentry.eventstore.models.GroupEvent.occurrence",
         return_value=TEST_ISSUE_OCCURRENCE,
@@ -96,7 +96,9 @@ class SlackResolvedInReleaseNotificationTest(
         with self.tasks():
             notification.send()
 
-        blocks, fallback_text = get_blocks_and_fallback_text()
+        blocks = orjson.loads(self.mock_post.call_args.kwargs["blocks"])
+        fallback_text = self.mock_post.call_args.kwargs["text"]
+
         release_name = notification.activity.data["version"]
         assert fallback_text == f"Issue marked as resolved in {release_name} by {self.name}"
         assert blocks[0]["text"]["text"] == fallback_text
@@ -108,7 +110,6 @@ class SlackResolvedInReleaseNotificationTest(
             "resolved_in_release_activity-slack",
         )
 
-    @responses.activate
     def test_resolved_in_release_parsed_version_block(self):
         """
         Test that the release version is formatted to the short version when block kit is enabled.
@@ -117,7 +118,9 @@ class SlackResolvedInReleaseNotificationTest(
         with self.tasks():
             notification.send()
 
-        blocks, fallback_text = get_blocks_and_fallback_text()
+        blocks = orjson.loads(self.mock_post.call_args.kwargs["blocks"])
+        fallback_text = self.mock_post.call_args.kwargs["text"]
+
         assert fallback_text == f"Issue marked as resolved in 1.0.0 by {self.name}"
         assert blocks[0]["text"]["text"] == fallback_text
         notification_uuid = self.get_notification_uuid(blocks[1]["text"]["text"])
