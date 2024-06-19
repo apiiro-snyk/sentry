@@ -6,7 +6,7 @@ import LoadingIndicator from 'sentry/components/loadingIndicator';
 import Panel from 'sentry/components/panels/panel';
 import {space} from 'sentry/styles/space';
 import type {MutableSearch} from 'sentry/utils/tokenizeSearch';
-import {useOnboardingProject} from 'sentry/views/performance/browser/webVitals/utils/useOnboardingProject';
+import {useOnboardingProject} from 'sentry/views/insights/common/queries/useOnboardingProject';
 import * as ModuleLayout from 'sentry/views/performance/moduleLayout';
 import {useHasData} from 'sentry/views/performance/onboarding/useHasData';
 
@@ -54,13 +54,12 @@ function ModulesOnboardingPanel({children}: {children: React.ReactNode}) {
 }
 
 const PerfImage = styled('img')`
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
-  width: 600px;
+  width: 260px;
   user-select: none;
   position: absolute;
   bottom: 0;
   right: 0;
+  padding-right: ${space(1)};
 `;
 
 const Container = styled('div')`
@@ -72,5 +71,6 @@ const Container = styled('div')`
 
 const ContentContainer = styled('div')`
   position: relative;
+  width: 70%;
   z-index: 1;
 `;
