@@ -15,23 +15,23 @@ import {decodeScalar} from 'sentry/utils/queryString';
 import {MutableSearch} from 'sentry/utils/tokenizeSearch';
 import {useLocation} from 'sentry/utils/useLocation';
 import useOrganization from 'sentry/utils/useOrganization';
+import {MetricReadout} from 'sentry/views/insights/common/components/metricReadout';
+import * as ModuleLayout from 'sentry/views/insights/common/components/moduleLayout';
+import {ModulePageProviders} from 'sentry/views/insights/common/components/modulePageProviders';
 import {useSpanMetrics} from 'sentry/views/insights/common/queries/useDiscover';
+import {useModuleBreadcrumbs} from 'sentry/views/insights/common/utils/useModuleBreadcrumbs';
 import {
   NumberOfPipelinesChart,
   PipelineDurationChart,
   TotalTokensUsedChart,
 } from 'sentry/views/insights/llmMonitoring/components/charts/llmMonitoringCharts';
 import {PipelineSpansTable} from 'sentry/views/insights/llmMonitoring/components/tables/pipelineSpansTable';
-import {MODULE_TITLE, RELEASE_LEVEL} from 'sentry/views/insights/llmMonitoring/settings';
+import {RELEASE_LEVEL} from 'sentry/views/insights/llmMonitoring/settings';
 import {
   SpanFunction,
   SpanMetricsField,
   type SpanMetricsQueryFilters,
 } from 'sentry/views/insights/types';
-import {MetricReadout} from 'sentry/views/performance/metricReadout';
-import * as ModuleLayout from 'sentry/views/performance/moduleLayout';
-import {ModulePageProviders} from 'sentry/views/performance/modulePageProviders';
-import {useModuleBreadcrumbs} from 'sentry/views/performance/utils/useModuleBreadcrumbs';
 
 interface Props {
   params: {
@@ -95,12 +95,12 @@ export function LLMMonitoringPage({params}: Props) {
               crumbs={[
                 ...crumbs,
                 {
-                  label: spanDescription ?? t('(no name)'),
+                  label: t('Pipeline Summary'),
                 },
               ]}
             />
             <Layout.Title>
-              {MODULE_TITLE}
+              {spanDescription}
               <FeatureBadge type={RELEASE_LEVEL} />
             </Layout.Title>
           </Layout.HeaderContent>
@@ -167,14 +167,10 @@ export function LLMMonitoringPage({params}: Props) {
 }
 
 function PageWithProviders({params}: Props) {
-  const location = useLocation<Query>();
-
-  const {'span.description': spanDescription} = location.query;
-
   return (
     <ModulePageProviders
       moduleName="ai"
-      pageTitle={spanDescription ?? t('(no name)')}
+      pageTitle={t('Pipeline Summary')}
       features="insights-addon-modules"
     >
       <LLMMonitoringPage params={params} />

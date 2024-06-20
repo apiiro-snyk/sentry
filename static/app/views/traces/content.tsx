@@ -37,7 +37,8 @@ import {decodeInteger, decodeList, decodeScalar} from 'sentry/utils/queryString'
 import {useLocation} from 'sentry/utils/useLocation';
 import useOrganization from 'sentry/utils/useOrganization';
 import usePageFilters from 'sentry/utils/usePageFilters';
-import * as ModuleLayout from 'sentry/views/performance/moduleLayout';
+import useProjects from 'sentry/utils/useProjects';
+import * as ModuleLayout from 'sentry/views/insights/common/components/moduleLayout';
 
 import {type Field, FIELDS, SORTS} from './data';
 import {
@@ -615,6 +616,7 @@ function useTraces<F extends string>({
   sort,
 }: UseTracesOptions<F>) {
   const organization = useOrganization();
+  const {projects} = useProjects();
   const {selection} = usePageFilters();
 
   const path = `/organizations/${organization.slug}/traces/`;
@@ -665,11 +667,19 @@ function useTraces<F extends string>({
 
   useEffect(() => {
     if (result.status === 'success') {
+      const project_slugs = [...new Set(result.data.data.map(trace => trace.project))];
+      const project_platforms = projects
+        .filter(p => project_slugs.includes(p.slug))
+        .map(p => p.platform ?? '');
+
       trackAnalytics('trace_explorer.search_success', {
         organization,
         queries,
         has_data: result.data.data.length > 0,
         num_traces: result.data.data.length,
+        num_missing_trace_root: result.data.data.filter(trace => trace.name === null)
+          .length,
+        project_platforms,
       });
     } else if (result.status === 'error') {
       const response = result.error.responseJSON;

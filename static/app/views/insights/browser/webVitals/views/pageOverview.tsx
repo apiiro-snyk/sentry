@@ -34,10 +34,10 @@ import {useProjectRawWebVitalsQuery} from 'sentry/views/insights/browser/webVita
 import {calculatePerformanceScoreFromStoredTableDataRow} from 'sentry/views/insights/browser/webVitals/queries/storedScoreQueries/calculatePerformanceScoreFromStored';
 import {useProjectWebVitalsScoresQuery} from 'sentry/views/insights/browser/webVitals/queries/storedScoreQueries/useProjectWebVitalsScoresQuery';
 import type {WebVitals} from 'sentry/views/insights/browser/webVitals/types';
-import {ModulePageProviders} from 'sentry/views/performance/modulePageProviders';
+import {ModulePageProviders} from 'sentry/views/insights/common/components/modulePageProviders';
+import {useModuleBreadcrumbs} from 'sentry/views/insights/common/utils/useModuleBreadcrumbs';
+import {useModuleURL} from 'sentry/views/insights/common/utils/useModuleURL';
 import {transactionSummaryRouteWithQuery} from 'sentry/views/performance/transactionSummary/utils';
-import {useModuleBreadcrumbs} from 'sentry/views/performance/utils/useModuleBreadcrumbs';
-import {useModuleURL} from 'sentry/views/performance/utils/useModuleURL';
 
 export enum LandingDisplayField {
   OVERVIEW = 'overview',
@@ -139,7 +139,7 @@ export function PageOverview() {
         <Layout.Header>
           <Layout.HeaderContent>
             <Breadcrumbs
-              crumbs={[...crumbs, ...(transaction ? [{label: 'Page Overview'}] : [])]}
+              crumbs={[...crumbs, ...(transaction ? [{label: 'Page Summary'}] : [])]}
             />
             <Layout.Title>
               {transaction && project && <ProjectAvatar project={project} size={24} />}
