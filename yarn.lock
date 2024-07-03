@@ -2794,6 +2794,16 @@
     "@react-types/slider" "^3.7.0"
     "@swc/helpers" "^0.5.0"
 
+"@react-stately/slider@^3.5.4":
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/@react-stately/slider/-/slider-3.5.4.tgz#f8c1b5133769380348fa1e8a7a513ebbd88a8355"
+  integrity sha512-Jsf7K17dr93lkNKL9ij8HUcoM1sPbq8TvmibD6DhrK9If2lje+OOL8y4n4qreUnfMT56HCAeS9wCO3fg3eMyrw==
+  dependencies:
+    "@react-stately/utils" "^3.10.1"
+    "@react-types/shared" "^3.23.1"
+    "@react-types/slider" "^3.7.3"
+    "@swc/helpers" "^0.5.0"
+
 "@react-stately/tabs@^3.6.6":
   version "3.6.6"
   resolved "https://registry.yarnpkg.com/@react-stately/tabs/-/tabs-3.6.6.tgz#69f4a042406cbe284ffe4c56d3bc8d57cad693fe"
@@ -2922,6 +2932,13 @@
   integrity sha512-uyQXUVFfqc9SPUW0LZLMan2n232F/OflRafiHXz9viLFa9tVOupVa7GhASRAoHojwkjoJ1LjFlPih7g5dOZ0/Q==
   dependencies:
     "@react-types/shared" "^3.22.0"
+
+"@react-types/slider@^3.7.3":
+  version "3.7.3"
+  resolved "https://registry.yarnpkg.com/@react-types/slider/-/slider-3.7.3.tgz#d6de0626c6977dd10faea2dba656193106ffbdb8"
+  integrity sha512-F8qFQaD2mqug2D0XeWMmjGBikiwbdERFlhFzdvNGbypPLz3AZICBKp1ZLPWdl0DMuy03G/jy6Gl4mDobl7RT2g==
+  dependencies:
+    "@react-types/shared" "^3.23.1"
 
 "@react-types/tabs@^3.3.7":
   version "3.3.7"
